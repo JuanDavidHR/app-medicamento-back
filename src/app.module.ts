@@ -45,7 +45,8 @@ import { User } from "./modules/users/domain/entities/user.entity";
           ],
           synchronize: true,
           ssl:
-            configService.get<string>("DB_SSL") === "true"
+            configService.get<string>("DB_SSL") === "true" ||
+            (url && !url.includes("localhost"))
               ? { rejectUnauthorized: false }
               : false,
         };
