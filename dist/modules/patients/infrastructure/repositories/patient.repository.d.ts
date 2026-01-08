@@ -6,5 +6,6 @@ export declare class PatientRepository implements IPatientRepository {
     constructor(repository: Repository<Patient>);
     findById(id: string): Promise<Patient | null>;
     findAll(): Promise<Patient[]>;
+    search(name?: string, condition?: string): Promise<Patient[]>;
     save(patient: Patient): Promise<Patient>;
 }

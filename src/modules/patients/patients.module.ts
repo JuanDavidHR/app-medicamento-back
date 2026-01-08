@@ -11,8 +11,11 @@ import { EventStoreService } from "../../common/services/event-store.service";
 import { IPatientRepository } from "./domain/repositories/patient.repository.interface";
 import { PatientRepository } from "./infrastructure/repositories/patient.repository";
 
-const CommandHandlers = [CreatePatientHandler];
-const QueryHandlers = [GetDashboardHandler];
+import { UpdatePatientHandler } from "./application/commands/handlers/update-patient.handler";
+import { SearchPatientsHandler } from "./application/queries/handlers/search-patients.handler";
+
+const CommandHandlers = [CreatePatientHandler, UpdatePatientHandler];
+const QueryHandlers = [GetDashboardHandler, SearchPatientsHandler];
 const EventHandlers = [AdministrationCompletedHandler];
 
 @Module({

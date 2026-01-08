@@ -27,6 +27,18 @@ let PatientRepository = class PatientRepository {
     async findAll() {
         return this.repository.find();
     }
+    async search(name, condition) {
+        const queryBuilder = this.repository.createQueryBuilder("patient");
+        if (name) {
+            queryBuilder.andWhere("patient.name ILIKE :name", { name: `%${name}%` });
+        }
+        if (condition) {
+            queryBuilder.andWhere("patient.condition ILIKE :condition", {
+                condition: `%${condition}%`,
+            });
+        }
+        return queryBuilder.getMany();
+    }
     async save(patient) {
         return this.repository.save(patient);
     }

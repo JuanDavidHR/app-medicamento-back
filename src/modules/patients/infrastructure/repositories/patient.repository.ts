@@ -19,6 +19,22 @@ export class PatientRepository implements IPatientRepository {
     return this.repository.find();
   }
 
+  async search(name?: string, condition?: string): Promise<Patient[]> {
+    const queryBuilder = this.repository.createQueryBuilder("patient");
+
+    if (name) {
+      queryBuilder.andWhere("patient.name ILIKE :name", { name: `%${name}%` });
+    }
+
+    if (condition) {
+      queryBuilder.andWhere("patient.condition ILIKE :condition", {
+        condition: `%${condition}%`,
+      });
+    }
+
+    return queryBuilder.getMany();
+  }
+
   async save(patient: Patient): Promise<Patient> {
     return this.repository.save(patient);
   }

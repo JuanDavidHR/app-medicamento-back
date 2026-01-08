@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MedicationAdministrationDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
-const medication_administration_entity_1 = require("../../domain/entities/medication-administration.entity");
+const medication_administration_entity_1 = require("../../../domain/entities/medication-administration.entity");
 class MedicationAdministrationDto {
 }
 exports.MedicationAdministrationDto = MedicationAdministrationDto;

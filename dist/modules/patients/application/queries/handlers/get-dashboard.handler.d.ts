@@ -6,6 +6,6 @@ export declare class GetDashboardHandler implements IQueryHandler<GetDashboardQu
     constructor(patientRepository: IPatientRepository);
     execute(query: GetDashboardQuery): Promise<{
         totalPatients: number;
-        patients: import("../../../infrastructure/dtos/patient-dashboard.dto").PatientDashboardDto[];
+        patients: import("../../../infrastructure/dtos/response/patient-dashboard.dto").PatientDashboardDto[];
     }>;
 }

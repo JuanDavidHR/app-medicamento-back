@@ -1,5 +1,5 @@
 import { Patient } from "../../domain/entities/patient.entity";
-import { PatientDashboardDto } from "../../infrastructure/dtos/patient-dashboard.dto";
+import { PatientDashboardDto } from "../../infrastructure/dtos/response/patient-dashboard.dto";
 
 export class PatientMapper {
   static toDashboardDto(patient: Patient): PatientDashboardDto {

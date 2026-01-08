@@ -7,6 +7,9 @@ import { Patient } from "./modules/patients/domain/entities/patient.entity";
 import { TreatmentPlan } from "./modules/treatments/domain/entities/treatment-plan.entity";
 import { MedicationAdministration } from "./modules/treatments/domain/entities/medication-administration.entity";
 import { DomainEventEntity } from "./common/persistence/domain-event.entity";
+import { UsersModule } from "./modules/users/users.module";
+import { AuthModule } from "./modules/auth/auth.module";
+import { User } from "./modules/users/domain/entities/user.entity";
 
 @Module({
   imports: [
@@ -38,6 +41,7 @@ import { DomainEventEntity } from "./common/persistence/domain-event.entity";
             TreatmentPlan,
             MedicationAdministration,
             DomainEventEntity,
+            User,
           ],
           synchronize: true,
           ssl:
@@ -50,6 +54,8 @@ import { DomainEventEntity } from "./common/persistence/domain-event.entity";
     }),
     PatientsModule,
     TreatmentsModule,
+    UsersModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

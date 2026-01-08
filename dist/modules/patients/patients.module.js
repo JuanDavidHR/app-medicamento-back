@@ -19,8 +19,10 @@ const domain_event_entity_1 = require("../../common/persistence/domain-event.ent
 const event_store_service_1 = require("../../common/services/event-store.service");
 const patient_repository_interface_1 = require("./domain/repositories/patient.repository.interface");
 const patient_repository_1 = require("./infrastructure/repositories/patient.repository");
-const CommandHandlers = [create_patient_handler_1.CreatePatientHandler];
-const QueryHandlers = [get_dashboard_handler_1.GetDashboardHandler];
+const update_patient_handler_1 = require("./application/commands/handlers/update-patient.handler");
+const search_patients_handler_1 = require("./application/queries/handlers/search-patients.handler");
+const CommandHandlers = [create_patient_handler_1.CreatePatientHandler, update_patient_handler_1.UpdatePatientHandler];
+const QueryHandlers = [get_dashboard_handler_1.GetDashboardHandler, search_patients_handler_1.SearchPatientsHandler];
 const EventHandlers = [update_daily_summary_handler_1.AdministrationCompletedHandler];
 let PatientsModule = class PatientsModule {
 };

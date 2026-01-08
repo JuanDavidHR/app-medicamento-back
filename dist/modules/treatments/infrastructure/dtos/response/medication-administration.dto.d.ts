@@ -1,4 +1,4 @@
-import { AdministrationStatus } from "../../domain/entities/medication-administration.entity";
+import { AdministrationStatus } from "../../../domain/entities/medication-administration.entity";
 export declare class MedicationAdministrationDto {
     readonly id: string;
     readonly treatmentPlanId: string;

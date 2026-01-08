@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { AdministrationStatus } from "../../domain/entities/medication-administration.entity";
+import { AdministrationStatus } from "../../../domain/entities/medication-administration.entity";
 
 export class MedicationAdministrationDto {
   @ApiProperty()

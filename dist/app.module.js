@@ -16,6 +16,9 @@ const patient_entity_1 = require("./modules/patients/domain/entities/patient.ent
 const treatment_plan_entity_1 = require("./modules/treatments/domain/entities/treatment-plan.entity");
 const medication_administration_entity_1 = require("./modules/treatments/domain/entities/medication-administration.entity");
 const domain_event_entity_1 = require("./common/persistence/domain-event.entity");
+const users_module_1 = require("./modules/users/users.module");
+const auth_module_1 = require("./modules/auth/auth.module");
+const user_entity_1 = require("./modules/users/domain/entities/user.entity");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -27,25 +30,43 @@ exports.AppModule = AppModule = __decorate([
             }),
             typeorm_1.TypeOrmModule.forRootAsync({
                 imports: [config_1.ConfigModule],
-                useFactory: (configService) => ({
-                    type: "postgres",
-                    host: configService.get("DB_HOST") || "localhost",
-                    port: configService.get("DB_PORT") || 5432,
-                    username: configService.get("DB_USER") || "postgres",
-                    password: configService.get("DB_PASSWORD") || "postgres",
-                    database: configService.get("DB_NAME") || "caregiver_db",
-                    entities: [
-                        patient_entity_1.Patient,
-                        treatment_plan_entity_1.TreatmentPlan,
-                        medication_administration_entity_1.MedicationAdministration,
-                        domain_event_entity_1.DomainEventEntity,
-                    ],
-                    synchronize: true,
-                }),
+                useFactory: (configService) => {
+                    const url = configService.get("DATABASE_URL");
+                    return {
+                        type: "postgres",
+                        url: url,
+                        host: !url
+                            ? configService.get("DB_HOST") || "localhost"
+                            : undefined,
+                        port: !url ? configService.get("DB_PORT") || 5432 : undefined,
+                        username: !url
+                            ? configService.get("DB_USER") || "postgres"
+                            : undefined,
+                        password: !url
+                            ? configService.get("DB_PASSWORD") || "postgres"
+                            : undefined,
+                        database: !url
+                            ? configService.get("DB_NAME") || "caregiver_db"
+                            : undefined,
+                        entities: [
+                            patient_entity_1.Patient,
+                            treatment_plan_entity_1.TreatmentPlan,
+                            medication_administration_entity_1.MedicationAdministration,
+                            domain_event_entity_1.DomainEventEntity,
+                            user_entity_1.User,
+                        ],
+                        synchronize: true,
+                        ssl: configService.get("DB_SSL") === "true"
+                            ? { rejectUnauthorized: false }
+                            : false,
+                    };
+                },
                 inject: [config_1.ConfigService],
             }),
             patients_module_1.PatientsModule,
             treatments_module_1.TreatmentsModule,
+            users_module_1.UsersModule,
+            auth_module_1.AuthModule,
         ],
     })
 ], AppModule);
