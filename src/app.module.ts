@@ -9,7 +9,13 @@ import { MedicationAdministration } from "./modules/treatments/domain/entities/m
 import { DomainEventEntity } from "./common/persistence/domain-event.entity";
 import { UsersModule } from "./modules/users/users.module";
 import { AuthModule } from "./modules/auth/auth.module";
+import { MedicationsModule } from "./modules/medications/medications.module";
+import { CaregiversModule } from "./modules/caregivers/caregivers.module";
+import { RemindersModule } from "./modules/reminders/reminders.module";
 import { User } from "./modules/users/domain/entities/user.entity";
+import { Medication } from "./modules/medications/domain/entities/medication.entity";
+import { CaregiverPatient } from "./modules/caregivers/domain/entities/caregiver-patient.entity";
+import { Reminder } from "./modules/reminders/domain/entities/reminder.entity";
 
 @Module({
   imports: [
@@ -42,6 +48,9 @@ import { User } from "./modules/users/domain/entities/user.entity";
             MedicationAdministration,
             DomainEventEntity,
             User,
+            Medication,
+            CaregiverPatient,
+            Reminder,
           ],
           synchronize: true,
           ssl:
@@ -57,6 +66,9 @@ import { User } from "./modules/users/domain/entities/user.entity";
     TreatmentsModule,
     UsersModule,
     AuthModule,
+    MedicationsModule,
+    CaregiversModule,
+    RemindersModule,
   ],
 })
 export class AppModule {}

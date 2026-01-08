@@ -22,4 +22,12 @@ export class TypeOrmUserRepository implements IUserRepository {
   async save(user: User): Promise<User> {
     return this.repository.save(user);
   }
+
+  async findAll(): Promise<User[]> {
+    return this.repository.find();
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.repository.delete(id);
+  }
 }

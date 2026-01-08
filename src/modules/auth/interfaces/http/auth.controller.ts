@@ -2,6 +2,7 @@ import { Controller, Post, Body, HttpCode, HttpStatus } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { AuthService } from "../../auth.service";
 import { LoginDto } from "../../infrastructure/dtos/login.dto";
+import { LoginResponse } from "../../domain/interfaces/auth.interfaces";
 
 @ApiTags("auth")
 @Controller("auth")
@@ -13,7 +14,7 @@ export class AuthController {
   @ApiOperation({ summary: "User login" })
   @ApiResponse({ status: 200, description: "Return JWT token" })
   @ApiResponse({ status: 401, description: "Unauthorized" })
-  async login(@Body() loginDto: LoginDto) {
+  async login(@Body() loginDto: LoginDto): Promise<LoginResponse> {
     return this.authService.login(loginDto);
   }
 }

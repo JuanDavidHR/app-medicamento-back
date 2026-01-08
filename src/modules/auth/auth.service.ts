@@ -1,8 +1,10 @@
-import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { Inject, Injectable, HttpStatus } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import { IUserRepository } from "../users/domain/repositories/user.repository.interface";
 import { LoginDto } from "./infrastructure/dtos/login.dto";
+import { CustomHttpException } from "../../common/exceptions/custom-http.exception";
+import { LoginResponse } from "./domain/interfaces/auth.interfaces";
 
 @Injectable()
 export class AuthService {
@@ -12,11 +14,15 @@ export class AuthService {
     private readonly jwtService: JwtService
   ) {}
 
-  async login(loginDto: LoginDto) {
+  async login(loginDto: LoginDto): Promise<LoginResponse> {
     const user = await this.userRepository.findByEmail(loginDto.email);
 
     if (!user) {
-      throw new UnauthorizedException("Invalid credentials");
+      throw new CustomHttpException(
+        "Invalid credentials",
+        "ERR_AUTH_INVALID_CREDENTIALS",
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const isPasswordValid = await bcrypt.compare(
@@ -25,7 +31,11 @@ export class AuthService {
     );
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException("Invalid credentials");
+      throw new CustomHttpException(
+        "Invalid credentials",
+        "ERR_AUTH_INVALID_CREDENTIALS",
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const payload = {

@@ -1,9 +1,10 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { Inject, ConflictException } from "@nestjs/common";
+import { Inject, HttpStatus } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { User } from "../../../domain/entities/user.entity";
 import { CreateUserCommand } from "../impl/create-user.command";
 import { IUserRepository } from "../../../domain/repositories/user.repository.interface";
+import { CustomHttpException } from "../../../../../common/exceptions/custom-http.exception";
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
@@ -15,7 +16,11 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
   async execute(command: CreateUserCommand): Promise<User> {
     const existingUser = await this.userRepository.findByEmail(command.email);
     if (existingUser) {
-      throw new ConflictException("User already exists");
+      throw new CustomHttpException(
+        "User already exists",
+        "ERR_USER_ALREADY_EXISTS",
+        HttpStatus.CONFLICT
+      );
     }
 
     const hashedPassword = await bcrypt.hash(command.password, 10);
