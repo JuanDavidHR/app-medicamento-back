@@ -56,7 +56,8 @@ exports.AppModule = AppModule = __decorate([
                             user_entity_1.User,
                         ],
                         synchronize: true,
-                        ssl: configService.get("DB_SSL") === "true"
+                        ssl: configService.get("DB_SSL") === "true" ||
+                            (url && !url.includes("localhost"))
                             ? { rejectUnauthorized: false }
                             : false,
                     };
