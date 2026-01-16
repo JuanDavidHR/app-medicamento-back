@@ -30,11 +30,11 @@ import { UpdatePatientCommand } from "../../../application/commands/impl/update-
 export class PatientsController {
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly queryBus: QueryBus
+    private readonly queryBus: QueryBus,
   ) {}
 
   @Post()
-  @Roles(UserRole.ADMIN)
+  @Roles(UserRole.ADMIN, UserRole.CAREGIVER)
   @ApiOperation({ summary: "Create a new patient" })
   @ApiResponse({ status: 201, description: "Patient created successfully" })
   async create(@Body() dto: CreatePatientDto) {

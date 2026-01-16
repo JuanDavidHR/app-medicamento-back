@@ -7,6 +7,7 @@ import {
   Put,
   Delete,
   UseGuards,
+  ForbiddenException,
 } from "@nestjs/common";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import {
@@ -32,7 +33,7 @@ import { UserRole } from "../../domain/enums/user-role.enum";
 export class UsersController {
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly queryBus: QueryBus
+    private readonly queryBus: QueryBus,
   ) {}
 
   @Post("register")
@@ -41,8 +42,16 @@ export class UsersController {
   @ApiResponse({ status: 409, description: "User already exists" })
   async register(@Body() registerDto: RegisterDto) {
     const { email, password, role } = registerDto;
+
+    // Security: Only allow self-registration for CAREGIVER or SUPERVISOR
+    if (role === UserRole.ADMIN || role === UserRole.PATIENT) {
+      throw new ForbiddenException(
+        "Registration for ADMIN or PATIENT roles is restricted. Please contact an administrator.",
+      );
+    }
+
     return this.commandBus.execute(
-      new CreateUserCommand(email, password, role)
+      new CreateUserCommand(email, password, role),
     );
   }
 
@@ -75,7 +84,7 @@ export class UsersController {
   @ApiResponse({ status: 404, description: "User not found" })
   async update(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.commandBus.execute(
-      new UpdateUserCommand(id, updateUserDto.email, updateUserDto.role)
+      new UpdateUserCommand(id, updateUserDto.email, updateUserDto.role),
     );
   }
 
