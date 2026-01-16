@@ -7,6 +7,7 @@ import {
   Query,
   Param,
   UseGuards,
+  Req,
 } from "@nestjs/common";
 import { JwtAuthGuard } from "../../../../auth/infrastructure/guards/jwt-auth.guard";
 import { RolesGuard } from "../../../../auth/infrastructure/guards/roles.guard";
@@ -45,8 +46,10 @@ export class PatientsController {
   @Get("dashboard")
   @ApiOperation({ summary: "Get patients dashboard" })
   @ApiResponse({ status: 200, type: DashboardResponseDto })
-  async getDashboard(): Promise<DashboardResponseDto> {
-    return this.queryBus.execute(new GetDashboardQuery());
+  async getDashboard(@Req() req): Promise<DashboardResponseDto> {
+    return this.queryBus.execute(
+      new GetDashboardQuery(req.user.id, req.user.role),
+    );
   }
 
   @Get("search")

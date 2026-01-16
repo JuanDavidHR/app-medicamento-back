@@ -8,7 +8,7 @@ import { IPatientRepository } from "../../domain/repositories/patient.repository
 export class PatientRepository implements IPatientRepository {
   constructor(
     @InjectRepository(Patient)
-    private readonly repository: Repository<Patient>
+    private readonly repository: Repository<Patient>,
   ) {}
 
   async findById(id: string): Promise<Patient | null> {
@@ -17,6 +17,15 @@ export class PatientRepository implements IPatientRepository {
 
   async findAll(): Promise<Patient[]> {
     return this.repository.find();
+  }
+
+  async findByCaregiverId(caregiverId: string): Promise<Patient[]> {
+    return this.repository
+      .createQueryBuilder("patient")
+      .innerJoin("caregiver_patients", "cp", "cp.patient_id = patient.id")
+      .where("cp.caregiver_id = :caregiverId", { caregiverId })
+      .andWhere("cp.is_active = :isActive", { isActive: true })
+      .getMany();
   }
 
   async search(name?: string, condition?: string): Promise<Patient[]> {

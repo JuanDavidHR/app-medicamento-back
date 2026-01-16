@@ -44,9 +44,10 @@ Obtén el token de acceso.
   {
     "email": "nuevo@example.com",
     "password": "password123",
-    "role": "caregiver" // Roles admitidos: 'admin', 'caregiver', 'patient'
+    "role": "caregiver" // Roles públicos permitidos: 'caregiver', 'supervisor'
   }
   ```
+  > **Nota:** No es posible registrarse públicamente como `admin` o `patient`. Estos roles están restringidos.
 
 ### 2. Obtener Todos los Usuarios (🔐 Token + Rol: ADMIN)
 
