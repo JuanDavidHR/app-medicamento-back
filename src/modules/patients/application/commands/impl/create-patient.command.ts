@@ -1,5 +1,5 @@
-import { ICommand } from '@nestjs/cqrs';
-import { IsString, IsOptional } from 'class-validator';
+import { ICommand } from "@nestjs/cqrs";
+import { IsString, IsOptional } from "class-validator";
 
 export class CreatePatientCommand implements ICommand {
   @IsString()
@@ -9,8 +9,18 @@ export class CreatePatientCommand implements ICommand {
   @IsOptional()
   readonly condition?: string;
 
-  constructor(name: string, condition?: string) {
+  readonly creatorId: string;
+  readonly creatorRole: string;
+
+  constructor(
+    name: string,
+    condition: string,
+    creatorId: string,
+    creatorRole: string,
+  ) {
     this.name = name;
     this.condition = condition;
+    this.creatorId = creatorId;
+    this.creatorRole = creatorRole;
   }
 }

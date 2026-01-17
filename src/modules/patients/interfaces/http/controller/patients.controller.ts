@@ -38,8 +38,13 @@ export class PatientsController {
   @Roles(UserRole.ADMIN, UserRole.CAREGIVER)
   @ApiOperation({ summary: "Create a new patient" })
   @ApiResponse({ status: 201, description: "Patient created successfully" })
-  async create(@Body() dto: CreatePatientDto) {
-    const command = new CreatePatientCommand(dto.name, dto.condition);
+  async create(@Body() dto: CreatePatientDto, @Req() req) {
+    const command = new CreatePatientCommand(
+      dto.name,
+      dto.condition,
+      req.user.id,
+      req.user.role,
+    );
     return this.commandBus.execute(command);
   }
 

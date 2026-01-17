@@ -18,8 +18,14 @@ const CommandHandlers = [CreatePatientHandler, UpdatePatientHandler];
 const QueryHandlers = [GetDashboardHandler, SearchPatientsHandler];
 const EventHandlers = [AdministrationCompletedHandler];
 
+import { CaregiversModule } from "../caregivers/caregivers.module";
+
 @Module({
-  imports: [CqrsModule, TypeOrmModule.forFeature([Patient, DomainEventEntity])],
+  imports: [
+    CqrsModule,
+    TypeOrmModule.forFeature([Patient, DomainEventEntity]),
+    CaregiversModule,
+  ],
   controllers: [PatientsController],
   providers: [
     ...CommandHandlers,
