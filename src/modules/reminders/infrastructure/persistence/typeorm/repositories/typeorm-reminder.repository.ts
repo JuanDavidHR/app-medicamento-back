@@ -11,7 +11,7 @@ import { IReminderRepository } from "../../../../domain/repositories/reminder.re
 export class TypeOrmReminderRepository implements IReminderRepository {
   constructor(
     @InjectRepository(Reminder)
-    private readonly repository: Repository<Reminder>
+    private readonly repository: Repository<Reminder>,
   ) {}
 
   async findById(id: string): Promise<Reminder | null> {
@@ -26,6 +26,25 @@ export class TypeOrmReminderRepository implements IReminderRepository {
       where: { patient_id: patientId },
       relations: ["treatmentPlan"],
       order: { scheduled_at: "ASC" },
+    });
+  }
+
+  async findByPatientAndDate(
+    patientId: string,
+    date: Date,
+  ): Promise<Reminder[]> {
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    return this.repository.find({
+      where: {
+        patient_id: patientId,
+        scheduled_at: Between(startOfDay, endOfDay),
+      },
+      relations: ["treatmentPlan"],
+      order: { scheduled_time: "ASC" },
     });
   }
 

@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   UseGuards,
+  Query,
 } from "@nestjs/common";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import {
@@ -13,6 +14,7 @@ import {
   ApiOperation,
   ApiResponse,
   ApiBearerAuth,
+  ApiQuery,
 } from "@nestjs/swagger";
 import { CreateReminderDto } from "../../infrastructure/dtos/create-reminder.dto";
 import { UpdateReminderStatusDto } from "../../infrastructure/dtos/update-reminder-status.dto";
@@ -20,6 +22,7 @@ import { CreateReminderCommand } from "../../application/commands/impl/create-re
 import { UpdateReminderStatusCommand } from "../../application/commands/impl/update-reminder-status.command";
 import { GetRemindersByPatientQuery } from "../../application/queries/impl/get-reminders-by-patient.query";
 import { GetPendingRemindersQuery } from "../../application/queries/impl/get-pending-reminders.query";
+
 import { JwtAuthGuard } from "../../../auth/infrastructure/guards/jwt-auth.guard";
 
 @ApiTags("reminders")
@@ -29,7 +32,7 @@ import { JwtAuthGuard } from "../../../auth/infrastructure/guards/jwt-auth.guard
 export class RemindersController {
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly queryBus: QueryBus
+    private readonly queryBus: QueryBus,
   ) {}
 
   @Post()
@@ -42,8 +45,8 @@ export class RemindersController {
         dto.scheduledAt,
         dto.scheduledTime,
         dto.treatmentPlanId,
-        dto.message
-      )
+        dto.message,
+      ),
     );
   }
 
@@ -56,9 +59,15 @@ export class RemindersController {
 
   @Get("patient/:patientId")
   @ApiOperation({ summary: "Get all reminders for a patient" })
+  @ApiQuery({ name: "date", required: false, type: String })
   @ApiResponse({ status: 200, description: "List of reminders" })
-  async getByPatient(@Param("patientId") patientId: string) {
-    return this.queryBus.execute(new GetRemindersByPatientQuery(patientId));
+  async getByPatient(
+    @Param("patientId") patientId: string,
+    @Query("date") date?: string,
+  ) {
+    return this.queryBus.execute(
+      new GetRemindersByPatientQuery(patientId, date),
+    );
   }
 
   @Patch(":id/status")
@@ -68,10 +77,10 @@ export class RemindersController {
   @ApiResponse({ status: 200, description: "Reminder status updated" })
   async updateStatus(
     @Param("id") id: string,
-    @Body() dto: UpdateReminderStatusDto
+    @Body() dto: UpdateReminderStatusDto,
   ) {
     return this.commandBus.execute(
-      new UpdateReminderStatusCommand(id, dto.status)
+      new UpdateReminderStatusCommand(id, dto.status),
     );
   }
 }
